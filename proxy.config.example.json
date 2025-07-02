@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "http://192.168.1.136:81/",
+    "secure": "false",
+    "auth": "admin:Hrh@12345",
+    "changeOrigin": "true"
+  }
+}
