@@ -20,7 +20,10 @@
               <i class="pi pi-chevron-down"></i>
             </div>
             <ul class="list-none p-0 m-0 overflow-hidden">
-              <li routerLink="dashboard" (click)="onChangeRoute($event, '')">
+              <li
+                routerLink="dashboard"
+                (click)="onChangeRoute($event, 'home')"
+              >
                 <a
                   pRipple
                   class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
