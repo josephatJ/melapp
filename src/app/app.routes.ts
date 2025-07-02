@@ -40,6 +40,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'job-card',
+    loadComponent: () =>
+      import('./pages/timesheet/timesheet.component').then(
+        (m) => m.TimesheetComponent
+      ),
+  },
+  {
     path: 'pis',
     loadComponent: () =>
       import('./pages/pis/pis.component').then((m) => m.PisComponent),
@@ -47,36 +54,50 @@ export const routes: Routes = [
   {
     path: 'submitted-timesheets',
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
-      ),
+      import(
+        './pages/submitted-timesheets/submitted-timesheets.component'
+      ).then((m) => m.SubmittedTimesheetsComponent),
   },
   {
-    path: 'complains',
+    path: 'my-complains',
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
+      import('./pages/complains/complains.component').then(
+        (m) => m.ComplainsComponent
       ),
   },
   {
     path: 'submitted-complains',
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
+      import('./pages/submitted-complains/submitted-complains.component').then(
+        (m) => m.SubmittedComplainsComponent
       ),
   },
   {
-    path: 'tranfer-requests',
+    path: 'transfer-requests',
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
+      import('./pages/transfer-requests/transfer-requests.component').then(
+        (m) => m.TransferRequestsComponent
       ),
   },
   {
-    path: 'messages',
+    path: 'messages-and-feedback',
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
+      import(
+        './pages/messages-and-feedback/messages-and-feedback.component'
+      ).then((m) => m.MessagesAndFeedbackComponent),
+  },
+  {
+    path: 'staff-payroll-list',
+    loadComponent: () =>
+      import('./pages/staff-list-payroll/staff-list-payroll.component').then(
+        (m) => m.StaffListPayrollComponent
+      ),
+  },
+  {
+    path: 'payroll',
+    loadComponent: () =>
+      import('./pages/payroll-processing/payroll-processing.component').then(
+        (m) => m.PayrollProcessingComponent
       ),
   },
   {
@@ -89,8 +110,8 @@ export const routes: Routes = [
   {
     path: 'settings-pis',
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
+      import('./pages/pis-settings/pis-settings.component').then(
+        (m) => m.PisSettingsComponent
       ),
   },
   {

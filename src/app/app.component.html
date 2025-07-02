@@ -95,7 +95,7 @@
                 <ul
                   class="list-none py-0 pl-4 pr-0 m-0 hidden overflow-y-hidden transition-all duration-[400ms] ease-in-out"
                 >
-                  <li (click)="onChangeRoute($event, '/timesheets')">
+                  <li (click)="onChangeRoute($event, 'timesheets')">
                     <a
                       pRipple
                       class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -104,7 +104,7 @@
                       <span class="font-medium">Timesheets </span>
                     </a>
                   </li>
-                  <li (click)="onChangeRoute($event, '/pis')">
+                  <li (click)="onChangeRoute($event, 'pis')">
                     <a
                       pRipple
                       class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -113,7 +113,7 @@
                       <span class="font-medium">PIs </span>
                     </a>
                   </li>
-                  <li>
+                  <li (click)="onChangeRoute($event, 'submitted-timesheets')">
                     <a
                       pRipple
                       class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -124,7 +124,15 @@
                   </li>
                 </ul>
               </li>
-
+              <li (click)="onChangeRoute($event, 'job-card')">
+                <a
+                  pRipple
+                  class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                >
+                  <i class="pi pi-calendar-clock mr-2"></i>
+                  <span class="font-medium">Job Card</span>
+                </a>
+              </li>
               <li>
                 <a
                   pRipple
@@ -142,7 +150,16 @@
                 <ul
                   class="list-none py-0 pl-4 pr-0 m-0 hidden overflow-y-hidden transition-all duration-[400ms] ease-in-out"
                 >
-                  <li>
+                  <li (click)="onChangeRoute($event, 'my-complains')">
+                    <a
+                      pRipple
+                      class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                    >
+                      <i class="pi pi-plus mr-2"></i>
+                      <span class="font-medium">My complains</span>
+                    </a>
+                  </li>
+                  <li (click)="onChangeRoute($event, 'submitted-complains')">
                     <a
                       pRipple
                       class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -151,18 +168,9 @@
                       <span class="font-medium">List</span>
                     </a>
                   </li>
-                  <li>
-                    <a
-                      pRipple
-                      class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                    >
-                      <i class="pi pi-plus mr-2"></i>
-                      <span class="font-medium">New</span>
-                    </a>
-                  </li>
                 </ul>
               </li>
-              <li>
+              <li (click)="onChangeRoute($event, 'transfer-requests')">
                 <a
                   pRipple
                   class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -171,7 +179,7 @@
                   <span class="font-medium">Tranfer requests</span>
                 </a>
               </li>
-              <li>
+              <li (click)="onChangeRoute($event, 'messages-and-feedback')">
                 <a
                   pRipple
                   class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -206,13 +214,50 @@
               <li>
                 <a
                   pRipple
+                  pStyleClass="@next"
+                  enterFromClass="hidden"
+                  enterActiveClass="animate-slidedown"
+                  leaveToClass="hidden"
+                  leaveActiveClass="animate-slideup"
+                  class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                >
+                  <i class="pi pi-users mr-2"></i>
+                  <span class="font-medium">Payroll</span>
+                  <i class="pi pi-chevron-down ml-auto"></i>
+                </a>
+                <ul
+                  class="list-none py-0 pl-4 pr-0 m-0 hidden overflow-y-hidden transition-all duration-[400ms] ease-in-out"
+                >
+                  <li (click)="onChangeRoute($event, 'staff-payroll-list')">
+                    <a
+                      pRipple
+                      class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                    >
+                      <i class="pi pi-users mr-2"></i>
+                      <span class="font-medium">Staff list </span>
+                    </a>
+                  </li>
+                  <li (click)="onChangeRoute($event, 'payroll')">
+                    <a
+                      pRipple
+                      class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                    >
+                      <i class="pi pi-list mr-2"></i>
+                      <span class="font-medium">Payroll processing</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li (click)="onChangeRoute($event, 'calendar')">
+                <a
+                  pRipple
                   class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                 >
                   <i class="pi pi-calendar mr-2"></i>
                   <span class="font-medium">Calendar</span>
                 </a>
               </li>
-              <li>
+              <li (click)="onChangeRoute($event, 'settings-pis')">
                 <a
                   pRipple
                   class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -221,7 +266,7 @@
                   <span class="font-medium">PIs</span>
                 </a>
               </li>
-              <li>
+              <li (click)="onChangeRoute($event, 'configurations')">
                 <a
                   pRipple
                   class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
