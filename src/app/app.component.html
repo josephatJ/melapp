@@ -203,8 +203,16 @@
                     <span class="font-medium">Messages</span>
                     <span
                       class="inline-flex items-center justify-center ml-auto bg-primary text-primary-contrast rounded-full"
-                      style="min-width: 1.5rem; height: 1.5rem"
-                      >3</span
+                      style="
+                        min-width: 1.5rem;
+                        height: 1.5rem;
+                        font-size: 0.8rem;
+                      "
+                    >
+                      {{
+                        unreadInformationState.unreadInformation()
+                          .unreadMessageConversations
+                      }}</span
                     >
                   </a>
                 </li>

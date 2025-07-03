@@ -8,6 +8,7 @@ import { NgxDhis2MenuModule } from './shared/modules/ngx-dhis2-menu/ngx-dhis2-me
 import { SharedCurrentUserStateService } from './shared/resources/services/current-user.service';
 import { NgxDhis2HttpClientService } from './shared/modules/ngx-http-client/services/http-client.service';
 import { UserInterface } from './shared/models/user.models';
+import { SharedMessageSummaryStateService } from './shared/resources/services/dashboard.service';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
 
   visible: boolean = true;
   currentUserState = inject(SharedCurrentUserStateService);
+  unreadInformationState = inject(SharedMessageSummaryStateService);
   private httpClientService = inject(NgxDhis2HttpClientService);
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
@@ -52,6 +54,15 @@ export class AppComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to fetch user:', err);
+      },
+    });
+
+    this.httpClientService.get('me/dashboard').subscribe({
+      next: (unreadInformation) => {
+        this.unreadInformationState.updateMessagesData(unreadInformation);
+      },
+      error: (err) => {
+        console.error('Failed to fetch unread messages:', err);
       },
     });
   }
