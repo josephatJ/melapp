@@ -1,0 +1,96 @@
+<p-card>
+  <div class="pl-2 pr-2">
+    <div class="profile-header">
+      <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+          <p-button
+            size="small"
+            severity="primary"
+            (onClick)="onEdit($event, currentUser()?.id)"
+            label="Edit"
+          />
+        </div>
+        <div class="col-md-4 col-sm-12 col-sx-12">
+          <div class="w-100 d-flex justify-between">
+            <div class="w-50">
+              <img
+                src="assets/images/person_icon.png"
+                style="height: 60px"
+                alt=""
+              />
+            </div>
+            <div class="w-50">
+              <p class="personal-profile-listing">
+                {{ currentUser()?.displayName }}
+              </p>
+              <p class="personal-profile-listing">
+                {{ currentUser()?.jobTitle }}
+              </p>
+              <p class="personal-profile-listing">(EMP0012)</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8 col-sm-12 col-sx-12">
+          <p class="personal-profile-listing">
+            <i class="pi pi-envelope mr-2" style="font-size: 0.7rem"></i>
+            <span>{{ currentUser()?.email ? currentUser()?.email : "-" }}</span>
+          </p>
+          <p class="personal-profile-listing">
+            <i class="pi pi-whatsapp mr-2" style="font-size: 0.7rem"></i>
+            <span>{{
+              currentUser()?.whatsApp ? currentUser()?.whatsApp : "-"
+            }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="w-100 mt-4">
+      <div class="row">
+        <div class="col-md-5 col-sm-12 col-sx-12">
+          <div class="w-100 p-4 staff-profile-border">
+            <div class="h6 mt-1 mb-2">Personal Information</div>
+            <div class="date-of-birth">
+              <p class="text-muted personal-profile-listing">
+                <i class="pi pi-calendar mr-2"></i>
+                <span>Date of Birth</span>
+              </p>
+              <p>
+                {{ currentUser()?.birthday | date }}
+              </p>
+            </div>
+            <div class="gender">
+              <p class="text-muted personal-profile-listing">
+                <span>Gender</span>
+              </p>
+              <p>
+                {{
+                  currentUser()?.gender === "gender_male"
+                    ? "Male"
+                    : currentUser()?.gender === "gender_female"
+                    ? "Female"
+                    : "-"
+                }}
+              </p>
+            </div>
+            <div class="address">
+              <p class="text-muted personal-profile-listing">
+                <span> Address </span>
+              </p>
+              <p class="text-muted personal-profile-listing">-</p>
+            </div>
+            <div class="qualification">
+              <p class="text-muted personal-profile-listing">
+                <span> Qualification </span>
+              </p>
+              <p class="text-muted personal-profile-listing">-</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 col-sm-12 col-sx-12">
+          <div class="w-100 p-2 staff-profile-border"></div>
+        </div>
+      </div>
+    </div>
+    <div class="w-100 mt-4"></div>
+  </div>
+</p-card>
