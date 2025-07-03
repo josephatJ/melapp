@@ -1,10 +1,13 @@
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { primengModules } from './shared/primeng.modules';
 import { Drawer } from 'primeng/drawer';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDhis2MenuModule } from './shared/modules/ngx-dhis2-menu/ngx-dhis2-menu.module';
+import { SharedCurrentUserStateService } from './shared/resources/services/current-user.service';
+import { NgxDhis2HttpClientService } from './shared/modules/ngx-http-client/services/http-client.service';
+import { UserInterface } from './shared/models/user.models';
 
 @Component({
   selector: 'app-root',
@@ -27,27 +30,47 @@ export class AppComponent implements OnInit {
 
   closeCallback(e: Event): void {
     this.drawerRef.close(e);
-    // this.visible= true;
   }
 
   visible: boolean = true;
+  currentUserState = inject(SharedCurrentUserStateService);
+  private httpClientService = inject(NgxDhis2HttpClientService);
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    // const routeId: string =  this.activatedRoute.pathFromRoot;
-    console.log(this.activatedRoute.snapshot);
-    const routePath = location.hash.substring(1); // Removes the '#' from "#/home"
-    console.log('Current path:', routePath);
-    // this.currentMenuId.set(ac)
-    this.activatedRoute.fragment.subscribe((fragment) => {
-      console.log('Fragment:', fragment);
+    const routePath = location.hash.substring(1);
+    this.currentMenuId.set(routePath.split('/')[1]);
+
+    this.httpClientService.get('me').subscribe({
+      next: (user) => {
+        const updatedUser: UserInterface = {
+          ...user,
+          keyedAuthorities: this.createKeyValuePair(user?.authorities),
+        };
+        this.currentUserState.updateCurrentUser(updatedUser);
+      },
+      error: (err) => {
+        console.error('Failed to fetch user:', err);
+      },
     });
+  }
+
+  createKeyValuePair(items: string[]): {
+    [key: string]: string;
+  } {
+    let keyValuePairedData: any = {};
+    items?.forEach((item: string) => {
+      if (item) {
+        keyValuePairedData[item] = item;
+      }
+    });
+    return keyValuePairedData;
   }
 
   onChangeRoute(event: Event, path: string): void {
     event.stopPropagation();
-    console.log('path', path);
+    this.currentMenuId.set(path);
     this.router.navigate([path]);
   }
 }
