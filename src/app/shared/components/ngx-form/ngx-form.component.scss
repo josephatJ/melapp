@@ -1,0 +1,25 @@
+::ng-deep input {
+  padding: 10px !important;
+  width: 100%;
+  border-radius: 0px !important;
+}
+
+::ng-deep .p-select {
+  padding: 3px !important;
+  width: 100% !important;
+  border-radius: 0px !important;
+}
+
+::ng-deep .p-datepicker,
+.p-inputmask {
+  width: 100% !important;
+}
+
+.message-info-display {
+  color: red !important;
+  margin-top: -8px !important;
+}
+
+.invalid-field input {
+  border-color: red;
+}
