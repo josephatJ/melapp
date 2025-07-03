@@ -1,0 +1,34 @@
+<form action="" class="login-form" #loginForm="ngForm">
+  <input
+    class="login-form-input"
+    type="text"
+    required
+    [(ngModel)]="credentials.username"
+    name="username"
+    #username="ngModel"
+    placeholder="Enter username"
+    autofocus
+    tabindex="0"
+  />
+  <input
+    class="login-form-input"
+    type="password"
+    required
+    [(ngModel)]="credentials.password"
+    name="password"
+    #password="ngModel"
+    placeholder="Enter password"
+    autofocus
+    tabindex="1"
+  />
+  <button
+    class="login-form-button"
+    type="submit"
+    [disabled]="(!password.valid && !username.valid) || loggingIn"
+    (click)="onSubmit($event)"
+    tabindex="2"
+  >
+    {{ loggingIn ? "Logging in ..." : "Login" }}
+  </button>
+</form>
+<div *ngIf="loginError !== ''" class="login-error-block">{{ loginError }}</div>

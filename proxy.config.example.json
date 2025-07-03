@@ -1,8 +1,8 @@
 {
   "/api": {
-    "target": "http://192.168.1.136:81/",
+    "target": "https://play.im.dhis2.org/stable-2-42-0",
     "secure": "false",
-    "auth": "admin:Hrh@12345",
+    "auth": "admin:district",
     "changeOrigin": "true"
   }
 }

@@ -1,0 +1,59 @@
+<div class="sidebar-container">
+  <div class="sidebar-user-profile-block">
+    <div class="sidebar-user-profile-logo" *ngIf="currentUser$ | async">
+      {{ (currentUser$ | async)?.name | abbreviate }}
+    </div>
+    <div class="sidebar-user-profile-info">
+      <div>
+        <div class="sidebar-user-name" *ngIf="currentUser$ | async">
+          {{ (currentUser$ | async)?.name }}
+        </div>
+        <div class="sidebar-user-email" *ngIf="currentUser$ | async">
+          {{ (currentUser$ | async)?.email }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="sidebar-list-block">
+    <li
+      [ngClass]="{
+        'sidebar-app-hidden': !showSidebarApps
+      }"
+    >
+      <input
+        type="text"
+        class="sidebar-app-input"
+        placeholder="Search Apps"
+        [(ngModel)]="filteredApp"
+        (ngModelChange)="updateMenuModules()"
+      />
+    </li>
+    <li
+      class="sidebar-app-list"
+      [ngClass]="{
+        'sidebar-app-hidden': !showSidebarApps
+      }"
+    >
+      <a
+        *ngFor="let app of apps | filterByName: filteredApp"
+        [href]="app.defaultAction"
+        class="sidebar-app-menu-btn"
+      >
+        <div class="sidebar-app-menu-btn-content">
+          <img alt="" [src]="app.icon" title="{{ app.displayName }}" />
+          <div class="app-menu-name">{{ app.displayName }}</div>
+        </div>
+      </a>
+    </li>
+    <li *ngFor="let profileMenu of profileMenus">
+      <a [href]="rootUrl + profileMenu.defaultAction">
+        <img alt="" [src]="profileMenu.icon" /> {{ profileMenu.name }}
+      </a>
+    </li>
+    <li>
+      <a [href]="rootUrl + 'dhis-web-commons-security/logout.action'">
+        <img [src]="logOutIcon" /> Log Out
+      </a>
+    </li>
+  </ul>
+</div>

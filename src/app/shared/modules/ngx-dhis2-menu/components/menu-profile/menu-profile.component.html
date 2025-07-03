@@ -1,0 +1,61 @@
+<div
+  class="menu-profile-container"
+  appClickOutside
+  (clickOutside)="hideMenuProfile()"
+>
+  <div class="menu-profile-btn">
+    <a
+      class="menu-profile-icon"
+      [style.background-color]="backgroundColor | convertToLighterColor"
+      (mouseenter)="showMenuProfile($event)"
+    >
+      {{ (currentUser$ | async)?.name | abbreviate }}
+    </a>
+  </div>
+  <div
+    class="profile-menu-list-block"
+    *ngIf="showProfile"
+    (mouseleave)="hideMenuProfile($event)"
+  >
+    <div class="profile-menus-list">
+      <a
+        *ngFor="let profileMenu of profileMenus"
+        [href]="profileMenu.defaultAction"
+        class="profile-menu-btn"
+      >
+        <div>
+          <img alt="" [src]="contextPath + profileMenu.icon" />
+          <div class="profile-menu-name">{{ profileMenu?.name }}</div>
+        </div>
+      </a>
+    </div>
+    <div class="user-profile-block">
+      <div
+        [style.background-color]="backgroundColor | convertToLighterColor"
+        class="user-profile-logo"
+        *ngIf="currentUser$ | async"
+      >
+        {{ (currentUser$ | async)?.name | abbreviate }}
+      </div>
+      <div class="user-profile-name">
+        <span *ngIf="currentUser$ | async"
+          ><b>{{ (currentUser$ | async)?.name }}</b></span
+        >
+      </div>
+      <div>
+        <small *ngIf="currentUser$ | async">{{
+          (currentUser$ | async)?.email
+        }}</small>
+      </div>
+      <div class="logout-btn-block">
+        <a
+          class="logout-btn"
+          [href]="rootUrl + 'dhis-web-commons-security/logout.action'"
+          *ngIf="currentUser$ | async"
+        >
+          LOG OUT
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
