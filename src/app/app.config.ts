@@ -5,9 +5,9 @@ import { providePrimeNG } from 'primeng/config';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { routes } from './app.routes';
-import HRHPreset from '../hrh-presets';
 import { provideHttpClient } from '@angular/common/http';
 import { IndexDbServiceConfig } from './shared/modules/ngx-http-client/services/index-db.service';
+import MELPreset from '../mel-presets';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: HRHPreset,
+        preset: MELPreset,
         options: {
           darkModeSelector: false || 'none',
         },
@@ -27,7 +27,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: IndexDbServiceConfig,
       useValue: {
-        namespace: 'hrh-db',
+        namespace: 'mel-db',
         version: 1,
         models: {
           metadata: 'id,name,type',

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "name": "HRH module",
-  "description": "Human Resource for Health App",
+  "name": "MEL",
+  "description": "Monitoring, Evaluation & Learning module",
   "appType": "APP",
   "launch_path": "index.html",
   "icons": {
@@ -20,22 +20,11 @@
     }
   },
   "authorities": [
-    "ADD_STAFF",
-    "EDIT_STAFF",
-    "SUBMIT_TIMESHEET",
-    "REVIEW_TIMESHEET",
-    "APPROVE_TIMESHEET",
-    "ALL_APPROVE_TIMESHEET",
-    "SUBMIT_COMPLAINT",
-    "REVIEW_COMPLAINT",
-    "ADD_PERFORMANCE_INDICATOR",
-    "ADD_PROJECT_CONTRIBUTION",
-    "VIEW_PAYROLL",
-    "SM_ONLY_EDIT_MY_STAFF_DETAILS",
-    "SM_CONFIRM_STAFF_TRANSFER",
-    "SM_REQUEST_STAFF_TRANSFER",
-    "SM_DELETE_STAFF",
-    "SM_APPROVAL_LEVELS_SETTINGS",
-    "SM_BULK_APPROVE"
+    "MEL_ADD_PROJECT",
+    "MEL_EDIT_PROJECT",
+    "MEL_ADD_OBJECTIVE",
+    "MEL_EDIT_OBJECTIVE",
+    "MEL_ADD_ACTIVITY",
+    "MEL_EDIT_ACTIVITY"
   ]
 }

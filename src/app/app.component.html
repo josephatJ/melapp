@@ -5,302 +5,43 @@
   <p-drawer #drawerRef [(visible)]="visible">
     <ng-template #headless>
       <div class="flex flex-col h-full">
-        <div class="d-flex justify-content-center px-6 pt-4 pb-4 shrink-0">
-          <img src="assets/icons/logo.png" style="height: 50px" alt="" />
+        <div class="d-flex justify-content-left px-6 pt-4 pb-4 shrink-0">
+          <img src="assets/icons/logo2.png" style="height: 30px" alt="" />
+          <span class="ml-2 text-xl font-semibold">
+            <span class="primary">MEL</span>
+          </span>
         </div>
         <div class="overflow-y-auto">
-          <ul class="list-none p-2 m-0">
-            <li>
-              <div
+          <p-menu
+            [model]="items"
+            class="flex justify-center"
+            styleClass="w-full md:w-60"
+          >
+            <ng-template #submenuheader let-item>
+              <span class="text-primary font-bold">{{ item.label }}</span>
+            </ng-template>
+            <ng-template #item let-item>
+              <a
+                (click)="onChangeRoute($event, item?.routerLink)"
                 pRipple
-                pStyleClass="@next"
-                enterFromClass="hidden"
-                enterActiveClass="animate-slidedown"
-                leaveToClass="hidden"
-                leaveActiveClass="animate-slideup"
-                class="p-2 flex items-center justify-between text-surface-600 dark:text-surface-200 cursor-pointer p-ripple"
+                class="flex items-center p-menu-item-link"
               >
-                <span class="font-medium">FAVORITES</span>
-                <i class="pi pi-chevron-down"></i>
-              </div>
-              <ul class="list-none p-0 m-0 overflow-hidden">
-                <li
-                  [ngClass]="{ 'active-menu': currentMenuId() === 'home' }"
-                  (click)="onChangeRoute($event, 'home')"
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+                <p-badge
+                  *ngIf="item.badge"
+                  class="ml-auto"
+                  [value]="item.badge"
+                />
+                <span
+                  *ngIf="item.shortcut"
+                  class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1"
                 >
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-home mr-2"></i>
-                    <span class="font-medium">Home</span>
-                  </a>
-                </li>
-                <li
-                  (click)="onChangeRoute($event, 'dashboard')"
-                  [ngClass]="{ 'active-menu': currentMenuId() === 'dashboard' }"
-                >
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-objects-column mr-2"></i>
-                    <span class="font-medium">Dashboard</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    pRipple
-                    pStyleClass="@next"
-                    enterFromClass="hidden"
-                    enterActiveClass="animate-slidedown"
-                    leaveToClass="hidden"
-                    leaveActiveClass="animate-slideup"
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-users mr-2"></i>
-                    <span class="font-medium">Staff</span>
-                    <i class="pi pi-chevron-down ml-auto"></i>
-                  </a>
-                  <ul
-                    class="list-none py-0 pl-4 pr-0 m-0 hidden overflow-y-hidden transition-all duration-[400ms] ease-in-out"
-                  >
-                    <li
-                      (click)="onChangeRoute($event, 'staff')"
-                      [ngClass]="{ 'active-menu': currentMenuId() === 'staff' }"
-                    >
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-list mr-2"></i>
-                        <span class="font-medium">List</span>
-                      </a>
-                    </li>
-                    <li
-                      (click)="onChangeRoute($event, 'staff/new')"
-                      [ngClass]="{
-                        'active-menu': currentMenuId() === 'staff/new'
-                      }"
-                    >
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-plus mr-2"></i>
-                        <span class="font-medium">New staff</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <a
-                    pRipple
-                    pStyleClass="@next"
-                    enterFromClass="hidden"
-                    enterActiveClass="animate-slidedown"
-                    leaveToClass="hidden"
-                    leaveActiveClass="animate-slideup"
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-folder mr-2"></i>
-                    <span class="font-medium">Timesheets & PIs</span>
-                    <i class="pi pi-chevron-down ml-auto"></i>
-                  </a>
-                  <ul
-                    class="list-none py-0 pl-4 pr-0 m-0 hidden overflow-y-hidden transition-all duration-[400ms] ease-in-out"
-                  >
-                    <li (click)="onChangeRoute($event, 'timesheets')">
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-plus mr-2"></i>
-                        <span class="font-medium">Timesheets </span>
-                      </a>
-                    </li>
-                    <li (click)="onChangeRoute($event, 'pis')">
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-plus mr-2"></i>
-                        <span class="font-medium">PIs </span>
-                      </a>
-                    </li>
-                    <li (click)="onChangeRoute($event, 'submitted-timesheets')">
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-list mr-2"></i>
-                        <span class="font-medium">Submitted</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li (click)="onChangeRoute($event, 'job-card')">
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-calendar-clock mr-2"></i>
-                    <span class="font-medium">Job Card</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    pRipple
-                    pStyleClass="@next"
-                    enterFromClass="hidden"
-                    enterActiveClass="animate-slidedown"
-                    leaveToClass="hidden"
-                    leaveActiveClass="animate-slideup"
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-file mr-2"></i>
-                    <span class="font-medium">Complaints</span>
-                    <i class="pi pi-chevron-down ml-auto"></i>
-                  </a>
-                  <ul
-                    class="list-none py-0 pl-4 pr-0 m-0 hidden overflow-y-hidden transition-all duration-[400ms] ease-in-out"
-                  >
-                    <li (click)="onChangeRoute($event, 'my-complains')">
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-plus mr-2"></i>
-                        <span class="font-medium">My complains</span>
-                      </a>
-                    </li>
-                    <li (click)="onChangeRoute($event, 'submitted-complains')">
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-list mr-2"></i>
-                        <span class="font-medium">List</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li (click)="onChangeRoute($event, 'transfer-requests')">
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-list mr-2"></i>
-                    <span class="font-medium">Tranfer requests</span>
-                  </a>
-                </li>
-                <li (click)="onChangeRoute($event, 'messages-and-feedback')">
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-comments mr-2"></i>
-                    <span class="font-medium">Messages</span>
-                    <span
-                      class="inline-flex items-center justify-center ml-auto bg-primary text-primary-contrast rounded-full"
-                      style="
-                        min-width: 1.5rem;
-                        height: 1.5rem;
-                        font-size: 0.8rem;
-                      "
-                    >
-                      {{
-                        unreadInformationState.unreadInformation()
-                          .unreadMessageConversations
-                      }}</span
-                    >
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="list-none p-2 m-0">
-            <li>
-              <div
-                pRipple
-                pStyleClass="@next"
-                enterFromClass="hidden"
-                enterActiveClass="animate-slidedown"
-                leaveToClass="hidden"
-                leaveActiveClass="animate-slideup"
-                class="p-2 flex items-center justify-between text-surface-600 dark:text-surface-200 cursor-pointer p-ripple"
-              >
-                <span class="font-medium">SERVICES</span>
-                <i class="pi pi-chevron-down"></i>
-              </div>
-              <ul class="list-none p-0 m-0 overflow-hidden">
-                <li>
-                  <a
-                    pRipple
-                    pStyleClass="@next"
-                    enterFromClass="hidden"
-                    enterActiveClass="animate-slidedown"
-                    leaveToClass="hidden"
-                    leaveActiveClass="animate-slideup"
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-users mr-2"></i>
-                    <span class="font-medium">Payroll</span>
-                    <i class="pi pi-chevron-down ml-auto"></i>
-                  </a>
-                  <ul
-                    class="list-none py-0 pl-4 pr-0 m-0 hidden overflow-y-hidden transition-all duration-[400ms] ease-in-out"
-                  >
-                    <li (click)="onChangeRoute($event, 'staff-payroll-list')">
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-users mr-2"></i>
-                        <span class="font-medium">Staff list </span>
-                      </a>
-                    </li>
-                    <li (click)="onChangeRoute($event, 'payroll')">
-                      <a
-                        pRipple
-                        class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                      >
-                        <i class="pi pi-list mr-2"></i>
-                        <span class="font-medium">Payroll processing</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li (click)="onChangeRoute($event, 'calendar')">
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-calendar mr-2"></i>
-                    <span class="font-medium">Calendar</span>
-                  </a>
-                </li>
-                <li (click)="onChangeRoute($event, 'settings-pis')">
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-chart-bar mr-2"></i>
-                    <span class="font-medium">PIs</span>
-                  </a>
-                </li>
-                <li (click)="onChangeRoute($event, 'configurations')">
-                  <a
-                    pRipple
-                    class="flex items-center cursor-pointer p-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-cog mr-2"></i>
-                    <span class="font-medium">Configurations</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
+                  {{ item.shortcut }}
+                </span>
+              </a>
+            </ng-template>
+          </p-menu>
         </div>
         <div class="mt-auto">
           <hr class="mb-0 border-t border-0 border-surface" />
@@ -325,7 +66,14 @@
     style="z-index: 1200"
     [ngStyle]="{ 'margin-left': visible ? '13rem' : '0' }"
   >
-    <p-button size="small" (click)="visible = !visible" icon="pi pi-bars" />
+    <p-button
+      size="small"
+      variant="text"
+      severity="secondary"
+      pStyleClass="menu-nav-button"
+      (click)="visible = !visible"
+      icon="pi pi-bars"
+    />
     <span>
       {{ currentMenuId() }}
     </span>

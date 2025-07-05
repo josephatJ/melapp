@@ -9,6 +9,7 @@ import { SharedCurrentUserStateService } from './shared/resources/services/curre
 import { NgxDhis2HttpClientService } from './shared/modules/ngx-http-client/services/http-client.service';
 import { UserInterface } from './shared/models/user.models';
 import { SharedMessageSummaryStateService } from './shared/resources/services/dashboard.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ import { SharedMessageSummaryStateService } from './shared/resources/services/da
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  title = 'hrhapp';
+  title = 'MEL';
+  items: MenuItem[] | undefined;
   currentMenuId = signal<string>('home');
 
   @ViewChild('drawerRef') drawerRef!: Drawer;
@@ -41,6 +43,73 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.items = [
+      {
+        separator: false,
+      },
+      {
+        label: '',
+        items: [
+          {
+            label: 'Home',
+            icon: 'pi pi-home',
+            shortcut: '',
+            routerLink: 'home',
+          },
+          {
+            label: 'Dashboard',
+            icon: 'pi pi-objects-column',
+            shortcut: '',
+            routerLink: 'dashboard',
+          },
+          {
+            label: 'Activity Requests',
+            icon: 'pi pi-items',
+            shortcut: '',
+            routerLink: 'activity-requests',
+          },
+          {
+            label: 'Projects',
+            icon: 'pi pi-plus',
+            shortcut: '',
+            routerLink: 'projects',
+          },
+          {
+            label: 'SBP Tracker',
+            icon: 'pi pi-plus',
+            shortcut: '',
+            routerLink: 'sbp-tracker',
+          },
+        ],
+      },
+      {
+        label: 'Others',
+        items: [
+          {
+            label: 'Calendar',
+            icon: 'pi pi-calendar',
+            shortcut: '',
+            routerLink: 'calendar',
+          },
+          {
+            label: 'Messages',
+            icon: 'pi pi-inbox',
+            badge: '2',
+            routerLink: 'messages-and-feedback',
+          },
+          {
+            label: 'Configurations',
+            icon: 'pi pi-cog',
+            badge: '',
+            routerLink: 'configurations',
+          },
+        ],
+      },
+      {
+        separator: false,
+      },
+    ];
+
     const routePath = location.hash.substring(1);
     this.currentMenuId.set(routePath.split('/')[1]);
 
