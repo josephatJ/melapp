@@ -1,6 +1,10 @@
-# Hrhapp
+# MEL
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
+
+## About
+
+MEL is a Monitoring, Evaluation and Learning module developed on top of DHIS2 platform. Taking advantage of the comprehensive DHIS2 tracker design, APIs and the routes API for interacting with external services.
 
 ## Development server
 
