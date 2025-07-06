@@ -1,0 +1,42 @@
+[
+  {
+    "id": "default_1",
+    "name": "Projects",
+    "dashboardItems": [
+      {
+        "id": "item_1",
+        "visualization": {
+          "id": "item_1",
+          "type": "SINGLE_VALUE",
+          "category": "DEFAULT",
+          "name": "Number of projects",
+          "displayName": "# of projects",
+          "description": "Number of projects",
+          "dataSourceType": "sqlView",
+          "sqlView": {
+            "id": "",
+            "Name": "Total numbr of projects",
+            "displayName": "# of projects"
+          }
+        }
+      },
+      {
+        "id": "item_2",
+        "visualization": {
+          "id": "item_1",
+          "type": "SINGLE_VALUE",
+          "category": "DEFAULT",
+          "name": "Percentage of completed activities",
+          "displayName": "% of completed activities",
+          "description": "Percentage of completed activities",
+          "dataSourceType": "sqlView",
+          "sqlView": {
+            "id": "",
+            "Name": "Percentage of completed activities",
+            "displayName": "% of completed activities"
+          }
+        }
+      }
+    ]
+  }
+]
