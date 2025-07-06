@@ -1,0 +1,10 @@
+<div class="h5">
+  {{ name }}
+</div>
+<div class="row">
+  @for(dashboardItem of dashboardItems; track dashboardItem.id) {
+  <div class="col-md-6 col-sm-12 col-sx-12 p-2">
+    <app-shared-chart [dashboardItem]="dashboardItem"></app-shared-chart>
+  </div>
+  }
+</div>

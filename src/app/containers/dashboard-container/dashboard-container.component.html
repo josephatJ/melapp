@@ -1,0 +1,25 @@
+<p-tabs [(value)]="activeIndex" scrollable>
+  <p-tablist>
+    @for(tab of dashboards; track tab.id) {
+    <p-tab [value]="tab.id">
+      {{ tab.name }}
+    </p-tab>
+    }
+  </p-tablist>
+
+  <p-tabpanels>
+    @for(tab of dashboards; track tab.id) {
+    <p-tabpanel [value]="tab.id">
+      <ng-container *ngIf="activeIndex === tab.id">
+        <p class="m-0">
+          <app-chart-container
+            [id]="tab.id"
+            [dashboardItems]="tab.dashboardItems"
+            [name]="tab.name"
+          ></app-chart-container>
+        </p>
+      </ng-container>
+    </p-tabpanel>
+    }
+  </p-tabpanels>
+</p-tabs>

@@ -19,6 +19,27 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'activity-requests',
+    loadComponent: () =>
+      import('./pages/activity-request/activity-request.component').then(
+        (m) => m.ActivityRequestComponent
+      ),
+  },
+  {
+    path: 'projects',
+    loadComponent: () =>
+      import('./pages/projects/projects.component').then(
+        (m) => m.ProjectsComponent
+      ),
+  },
+  {
+    path: 'sbps',
+    loadComponent: () =>
+      import('./pages/sbps-tracker/sbps-tracker.component').then(
+        (m) => m.SbpsTrackerComponent
+      ),
+  },
+  {
     path: 'messages-and-feedback',
     loadComponent: () =>
       import(

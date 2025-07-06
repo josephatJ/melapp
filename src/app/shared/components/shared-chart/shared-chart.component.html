@@ -1,0 +1,7 @@
+<div class="card">
+  <p-chart
+    [type]="dashboardItem?.visualization?.type === 'LINE' ? 'doughnut' : 'bar'"
+    [data]="data"
+    [options]="options"
+  />
+</div>
