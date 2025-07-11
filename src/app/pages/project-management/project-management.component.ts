@@ -63,6 +63,7 @@ export class ProjectManagementComponent {
         if (!programResponse?.error) {
           this.projectsState.updateProjectProgram(programResponse);
           if (this.routeId() === 'new') {
+            this.projectsState.updateCurrentProject(null);
             this.formFieldsGroupedBySections.set(
               formulateFormFieldsBySections(
                 programResponse,
