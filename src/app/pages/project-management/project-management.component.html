@@ -1,0 +1,41 @@
+<div class="mt-2 p-1 project-management-container">
+  <div
+    class="flex justify-center"
+    animationDuration=".5s"
+    *ngIf="currentUser() === null || !projectProgram()"
+  >
+    <p-progress-spinner co ariaLabel="loading" />
+  </div>
+  <div *ngIf="currentUser() && projectProgram()">
+    <div
+      class="mb-4"
+      *ngFor="let formFieldsSection of formFieldsGroupedBySections()"
+    >
+      <div class="h5 mt-2 mb-2 text-muted">
+        {{ formFieldsSection?.name }}
+      </div>
+      <ngx-form
+        [formFields]="formFieldsSection?.formFields"
+        [formId]="formFieldsSection?.id"
+        [responsivenessClass]="'col-md-6'"
+        (formData)="onGetFormData($event, formFieldsSection?.id)"
+      ></ngx-form>
+    </div>
+    <div class="w-100 d-flex justify-content-end">
+      <p-progress-spinner
+        *ngIf="saving"
+        strokeWidth="3"
+        fill="transparent"
+        animationDuration=".5s"
+        class="mr-2"
+        [style]="{ width: '35px', height: '35px' }"
+      />
+      <p-button
+        severity="primary"
+        [disabled]="!formData.isFormValid || saving"
+        (onClick)="onSave($event)"
+        label="Save"
+      />
+    </div>
+  </div>
+</div>

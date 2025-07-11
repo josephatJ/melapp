@@ -67,4 +67,11 @@ export const routes: Routes = [
         (m) => m.ConfigurationsComponent
       ),
   },
+  {
+    path: 'projects/:id',
+    loadComponent: () =>
+      import('./pages/project-management/project-management.component').then(
+        (m) => m.ProjectManagementComponent
+      ),
+  },
 ];

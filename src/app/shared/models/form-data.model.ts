@@ -1,4 +1,5 @@
 export interface FormDataModel {
-  data: any[];
+  data: any;
   isFormValid: boolean;
+  formValidityBySection?: any;
 }

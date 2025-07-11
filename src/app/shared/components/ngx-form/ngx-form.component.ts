@@ -29,6 +29,7 @@ import { NgxSelectUserComponent } from '../ngx-select-user/ngx-select-user.compo
 export class NgxFormComponent implements OnChanges {
   @Input() formFields!: CustomField[];
   @Input() responsivenessClass: string = 'col-md-4';
+  @Input() formId!: string;
   formValues: any = {};
   @Output() formData: EventEmitter<any> = new EventEmitter<any>();
 
