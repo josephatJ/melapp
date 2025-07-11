@@ -1,0 +1,24 @@
+<p-select
+  (onFilter)="getUsers($event)"
+  [options]="users$ | async"
+  optionLabel="displayName"
+  [(ngModel)]="selectedUser"
+  (ngModelChange)="getDataValue($event)"
+  [filter]="true"
+  filterBy="username"
+  [showClear]="true"
+  class="w-full w-100"
+>
+  <ng-template>
+    <div class="flex items-center gap-2">
+      <div>
+        {{ selectedUser?.displayName }}
+      </div>
+    </div>
+  </ng-template>
+  <ng-template let-user #item>
+    <div class="flex items-center gap-2">
+      <div>{{ user.displayName }}</div>
+    </div>
+  </ng-template>
+</p-select>

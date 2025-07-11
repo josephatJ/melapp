@@ -13,10 +13,14 @@ export interface CustomField {
   minDate?: Date;
   maxDate?: Date;
   mask?: string;
+  min?: number;
+  max?: number;
 }
 
 export interface CustomFieldOption {
   id: string;
   name: string;
   code: any;
+  label?: string;
+  value?: string;
 }

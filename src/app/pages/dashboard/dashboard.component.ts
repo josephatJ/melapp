@@ -5,10 +5,16 @@ import { DashboardContainerComponent } from '../../containers/dashboard-containe
 import { DashboardStateService } from '../../shared/resources/services/dashboard/dashboards.state.service';
 import { NgxDhis2HttpClientService } from '../../shared/modules/ngx-http-client/services/http-client.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, DashboardContainerComponent, ProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    DashboardContainerComponent,
+    ProgressSpinnerModule,
+    CardModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -20,7 +26,7 @@ export class DashboardComponent implements OnInit {
   dashboards = this.dashboardsState.dashboards;
 
   ngOnInit(): void {
-    if (this.dashboards().length === 0) {
+    if (!this.dashboards()) {
       this.httpClientService
         .get(
           'dashboards.json?fields=id,name,code,dashboardItems[*,visualization[*]]'

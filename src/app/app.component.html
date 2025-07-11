@@ -13,7 +13,7 @@
         </div>
         <div class="overflow-y-auto">
           <p-menu
-            [model]="items"
+            [model]="menuItems()"
             class="flex justify-center"
             styleClass="w-full md:w-60"
           >
@@ -64,7 +64,7 @@
   <div
     class="app-routings-container"
     style="z-index: 1200"
-    [ngStyle]="{ 'margin-left': visible ? '13rem' : '0' }"
+    [ngStyle]="{ 'margin-left': visible ? '14rem' : '0' }"
   >
     <p-button
       size="small"

@@ -1,6 +1,5 @@
 // dashboard
 import { Injectable, signal } from '@angular/core';
-import { UserInterface } from '../../models/user.models';
 
 @Injectable({
   providedIn: 'root',

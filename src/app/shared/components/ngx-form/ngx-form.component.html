@@ -6,14 +6,55 @@
         [class]="form.controls[field.id].invalid ? 'invalid-field' : ''"
         [class]="responsivenessClass"
       >
-        <label for="{{ field?.id }}">{{ field?.label }}</label>
+        <label
+          style="margin-bottom: -4px; font-weight: 600"
+          [ngStyle]="{
+            color:
+              form.controls[field.id]?.invalid &&
+              form.controls[field.id]?.touched
+                ? 'red'
+                : ''
+          }"
+          for="{{ field?.id }}"
+          >{{ field?.label }}
+          <span *ngIf="field?.required">*</span>
+        </label>
         <input
-          *ngIf="field.type === 'TEXT'"
+          *ngIf="field.type === 'TEXT' || field.type === 'REFERENCE'"
           pInputText
           size="small"
           [name]="field.id"
           [id]="field.id"
           [(ngModel)]="field.value"
+          (ngModelChange)="getDataValue($event, field)"
+          [disabled]="field?.disabled"
+          [required]="field?.required"
+          autocomplete="off"
+        />
+        <textarea
+          *ngIf="field.type === 'LONG_TEXT'"
+          size="small"
+          [rows]="field.rows"
+          [cols]="field?.cols"
+          pTextarea
+          [name]="field.id"
+          [id]="field.id"
+          [(ngModel)]="field.value"
+          (ngModelChange)="getDataValue($event, field)"
+          [disabled]="field?.disabled"
+          [required]="field?.required"
+          autocomplete="off"
+        ></textarea>
+        <p-inputnumber
+          *ngIf="field.type === 'INTEGER_POSITIVE' || field.type === 'NUMBER'"
+          size="small"
+          [(ngModel)]="field.value"
+          [id]="field.id"
+          [name]="field.id"
+          mode="decimal"
+          [min]="field.min"
+          [max]="field.max"
+          [useGrouping]="false"
           (ngModelChange)="getDataValue($event, field)"
           [disabled]="field?.disabled"
           [required]="field?.required"
@@ -46,6 +87,12 @@
           [required]="field?.required"
           autocomplete="off"
         ></p-inputmask>
+        <ngx-select-user
+          *ngIf="field.type === 'USERNAME'"
+          [field]="field"
+          (userDetails)="onGetUserDetails($event)"
+          (userDetails)="getDataValue($event, field)"
+        />
         <p-select
           *ngIf="field.type === 'DROPDOWN'"
           [options]="field.options"
@@ -67,7 +114,7 @@
           </ng-template>
           <ng-template let-option #item>
             <div class="flex items-center gap-2">
-              <div>{{ option.label }}</div>
+              <div>{{ option.label ? option.label : option.name }}</div>
             </div>
           </ng-template>
         </p-select>

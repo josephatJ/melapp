@@ -40,6 +40,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'activities',
+    loadComponent: () =>
+      import('./pages/attended-activities/attended-activities.component').then(
+        (m) => m.AttendedActivitiesComponent
+      ),
+  },
+  {
     path: 'messages-and-feedback',
     loadComponent: () =>
       import(

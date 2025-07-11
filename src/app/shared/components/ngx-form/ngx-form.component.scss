@@ -23,3 +23,7 @@
 .invalid-field input {
   border-color: red;
 }
+
+::ng-deep .p-select-option.p-select-option-selected {
+  background-color: transparent !important;
+}

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { SharedCurrentUserStateService } from '../../resources/services/current-user.service';
-import { SharedStaffStateService } from '../../resources/services/staff/staff.state.service';
 import { primengModules } from '../../primeng.modules';
 import { Router } from '@angular/router';
 
@@ -14,7 +13,6 @@ import { Router } from '@angular/router';
 })
 export class StaffProfileComponent implements OnInit {
   private userState = inject(SharedCurrentUserStateService);
-  private staffState = inject(SharedStaffStateService);
   private router = inject(Router);
 
   currentUser = this.userState.currentUser;

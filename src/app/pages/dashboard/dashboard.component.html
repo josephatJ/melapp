@@ -1,11 +1,13 @@
-<div
-  class="flex justify-center"
-  animationDuration=".5s"
-  *ngIf="dashboards().length == 0"
->
+<div class="flex justify-center" animationDuration=".5s" *ngIf="!dashboards()">
   <p-progress-spinner co ariaLabel="loading" />
 </div>
 
+<div
+  class="d-flex justify-content-center p-4"
+  *ngIf="dashboards() && dashboards()?.length === 0"
+>
+  <div class="h5">No dashboards</div>
+</div>
 <app-dashboard-container
   *ngIf="dashboards() && dashboards().length > 0"
   [dashboards]="dashboards()"
