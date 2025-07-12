@@ -102,7 +102,7 @@ export class ProjectsComponent {
                             },
                           },
                           {
-                            label: 'Objectives',
+                            label: 'Activities',
                             icon: 'pi pi-list',
                             command: (event: any) => {
                               this.projectsState.updateCurrentProject({

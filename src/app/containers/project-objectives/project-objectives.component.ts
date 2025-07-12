@@ -50,7 +50,7 @@ export class ProjectObjectivesComponent {
   breadCrubItems = computed(() => [
     {
       label: this.currentProject()?.keyedAttributeValues['NAME']?.value,
-      routerLink: 'projects/' + this.currentProject()?.trackedEntity,
+      // routerLink: '/projects/' + this.currentProject()?.trackedEntity,
     },
     {
       label: 'Objectives',

@@ -1,1 +1,111 @@
-<p>project-activities works!</p>
+<div class="mt-2 p-1 project-activities-container">
+  <div
+    class="flex justify-center"
+    animationDuration=".5s"
+    *ngIf="
+      currentUser() === null ||
+      !projectProgram() ||
+      !currentProject() ||
+      !activities()
+    "
+  >
+    <p-progress-spinner co ariaLabel="loading" />
+  </div>
+  <div
+    *ngIf="
+      currentUser() && projectProgram() && currentProject() && activities()
+    "
+  >
+    <div class="w-100">
+      <p-breadcrumb [model]="breadCrubItems()" [home]="home" />
+    </div>
+    <div class="row mb-4 p-2">
+      <div class="col-10">
+        <div class="h5 mb-2 text-muted">Specific activities</div>
+      </div>
+      <div class="col-2 d-flex justify-content-end">
+        <p-button
+          severity="secondary"
+          text
+          label=""
+          icon="pi pi-chevron-left"
+          (onClick)="showActivityFormDrawer = !showActivityFormDrawer"
+        />
+      </div>
+      <div class="col-md-12 col-sm-12 col-sx-12">
+        <p-table
+          size="small"
+          [value]="activities()"
+          showGridlines
+          [tableStyle]="{ 'min-width': '30rem' }"
+        >
+          <ng-template #header>
+            <tr>
+              <th>Sn</th>
+              <th>Objective</th>
+              <th>Description</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-dataRow>
+            <tr (click)="onSetCurrentActivity($event, dataRow)">
+              <td>{{ dataRow?.sn }}</td>
+              <td>
+                {{ dataRow?.keyedAttributeValues["SPECIFIC_OBJECTIVE"]?.value }}
+              </td>
+              <td>
+                {{
+                  dataRow?.keyedAttributeValues["OBJECTIVE_DESCRIPTION"]?.value
+                }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <p-drawer
+        [(visible)]="showActivityFormDrawer"
+        position="right"
+        styleClass="activities-drawer"
+      >
+        <ng-template #header>
+          <div class="flex items-center gap-2">
+            <span class="font-bold">Objective management</span>
+          </div>
+        </ng-template>
+        <div class="col-md-12 col-sm-12 col-sx-12">
+          <div class="pl-2 pr-2">
+            <div
+              *ngFor="let formFieldsSection of formFieldsGroupedBySections()"
+            >
+              <ngx-form
+                [formFields]="formFieldsSection?.formFields"
+                [formId]="formFieldsSection?.id"
+                [responsivenessClass]="'col-md-12'"
+                (formData)="onGetFormData($event, formFieldsSection?.id)"
+              ></ngx-form>
+            </div>
+          </div>
+        </div>
+        <ng-template #footer>
+          <div class="flex items-center gap-2">
+            <div class="w-100 d-flex justify-content-end">
+              <p-progress-spinner
+                *ngIf="saving"
+                strokeWidth="3"
+                fill="transparent"
+                animationDuration=".5s"
+                class="mr-2"
+                [style]="{ width: '35px', height: '35px' }"
+              />
+              <p-button
+                severity="primary"
+                [disabled]="!formData.isFormValid || saving"
+                (onClick)="onSave($event)"
+                label="Save"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-drawer>
+    </div>
+  </div>
+</div>

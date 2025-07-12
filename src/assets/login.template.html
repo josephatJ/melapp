@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BMF Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body,
+      html {
+        height: 100%;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100vh;
+      }
+
+      .images-container {
+        width: 100%;
+        /* display: flex;
+        justify-content: center; */
+      }
+
+      .left-side,
+      .right-side {
+        width: 50%;
+        height: 100vh;
+      }
+
+      .left-side {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .right-side {
+        padding: 16px;
+        overflow: hidden;
+        border-left: solid 1px #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #login-container {
+        padding: 16px;
+      }
+
+      #login-container h3,
+      h4 {
+        text-align: center;
+      }
+
+      #login-box {
+        margin-top: 250px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+
+        .left-side,
+        .right-side {
+          width: 100%;
+          height: auto;
+        }
+
+        .right-side {
+          border-left: none;
+          border-top: solid 1px #eee;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-side" style="background-color: #00854624">
+        <div class="images-container">
+          <div style="text-align: center">
+            <img
+              height="120"
+              src="data:image/png;base64,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"
+              alt="MEL Logo"
+            />
+            <!-- </div>
+          <div style="width: 50%; text-align: center"> -->
+          </div>
+        </div>
+      </div>
+      <div class="right-side">
+        <div id="login-container">
+          <h3 style="color: #008546">MEL System For Your Organisation</h3>
+          <h5 style="color: #008546; text-align: center">
+            Do Projects and Strategic plans monitoring and evaluation anywhere
+            you are
+          </h5>
+          <div id="login-box">
+            <!-- Login form or content goes here -->
+          </div>
+          <p
+            style="margin-top: 50px; font-size: small; justify-content: center"
+          >
+            Designed to support organizations in tracking strategic business
+            plans and projects. It facilitates real-time progress monitoring,
+            indicator reporting, and performance measurement. The system
+            enhances decision-making by providing data-driven insights,
+            streamlining workflows, and ensuring alignment with organizational
+            goals. It serves as a centralized platform for managing activities,
+            outcomes, and learning across programs and strategic initiatives
+          </p>
+          <p style="margin-top: 50px; font-size: small; text-align: center">
+            <em>
+              For demo contact mwakyusajosephatj@gmail.com or info@nectech.tz or
+              via +255 717 210 512
+            </em>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

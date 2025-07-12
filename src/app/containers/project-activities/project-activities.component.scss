@@ -1,0 +1,19 @@
+.project-activities-container {
+  background-color: #fff;
+}
+
+@media (max-width: 768px) {
+  ::ng-deep .activities-drawer {
+    width: 25rem !important;
+    margin-top: 6rem !important;
+    height: calc(100% - 6rem) !important;
+  }
+}
+
+@media (min-width: 769px) {
+  ::ng-deep .activities-drawer {
+    width: 40rem !important;
+    height: calc(100% - 12rem) !important;
+    margin-top: 10rem !important;
+  }
+}
