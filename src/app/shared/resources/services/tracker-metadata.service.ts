@@ -14,7 +14,7 @@ export class TrackerMetadataService {
       id +
       '.json?fields=id,name,code,trackedEntityType[id,name,code,trackedEntityTypeAttributes[id,name,compulsory,displayInReport,valueType,trackedEntityAttribute[id,name,code,formName,valueType,optionSets[id,name,code,options[id,name,code]]]]],' +
       'programTrackedEntityAttributes[mandatory,displayInList,' +
-      'trackedEntityAttribute[id,name,valueType,formName,optionSet' +
+      'trackedEntityAttribute[id,name,valueType,code,formName,optionSet' +
       '[options[id,name,code]]]],programStages[id,name,description,programStageDataElements[id,compulsory,displayInReports,dataElement[id,name,code,formName,valueType,optionSets[options[id,name,code]]]],programStageSections[id,name,description,dataElements[id,name,code,formName,shortName,valueType,optionSet[options[id,name,code]]]]],programSections[id,name,trackedEntityAttributes' +
       '[id,name,code,shortName,valueType,formName,optionSet' +
       '[options[id,name,code]]]]';

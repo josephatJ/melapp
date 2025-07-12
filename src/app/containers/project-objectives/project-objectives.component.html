@@ -20,8 +20,21 @@
       <p-breadcrumb [model]="breadCrubItems()" [home]="home" />
     </div>
     <div class="row mb-4 p-2">
-      <div class="col-md-7 col-sm-12 col-sx-12">
-        <div class="h5 mb-2 text-muted">Specific Objectives</div>
+      <div class="col-10">
+        <div class="h5 mb-2 text-muted">
+          Specific Objectives{{ showObjectiveFormDrawer }}
+        </div>
+      </div>
+      <div class="col-2 d-flex justify-content-end">
+        <p-button
+          severity="secondary"
+          text
+          label=""
+          icon="pi pi-chevron-left"
+          (onClick)="showObjectiveFormDrawer = !showObjectiveFormDrawer"
+        />
+      </div>
+      <div class="col-md-12 col-sm-12 col-sx-12">
         <p-table
           size="small"
           [value]="objectives()"
@@ -50,35 +63,51 @@
           </ng-template>
         </p-table>
       </div>
-      <div class="col-md-5 col-sm-12 col-sx-12">
-        <div class="pl-2 pr-2">
-          <div *ngFor="let formFieldsSection of formFieldsGroupedBySections()">
-            <ngx-form
-              [formFields]="formFieldsSection?.formFields"
-              [formId]="formFieldsSection?.id"
-              [responsivenessClass]="'col-md-12'"
-              (formData)="onGetFormData($event, formFieldsSection?.id)"
-            ></ngx-form>
+      <p-drawer
+        [(visible)]="showObjectiveFormDrawer"
+        position="right"
+        styleClass="objectives-drawer"
+      >
+        <ng-template #header>
+          <div class="flex items-center gap-2">
+            <span class="font-bold">Objective management</span>
           </div>
-
-          <div class="w-100 d-flex justify-content-end">
-            <p-progress-spinner
-              *ngIf="saving"
-              strokeWidth="3"
-              fill="transparent"
-              animationDuration=".5s"
-              class="mr-2"
-              [style]="{ width: '35px', height: '35px' }"
-            />
-            <p-button
-              severity="primary"
-              [disabled]="!formData.isFormValid || saving"
-              (onClick)="onSave($event)"
-              label="Save"
-            />
+        </ng-template>
+        <div class="col-md-12 col-sm-12 col-sx-12">
+          <div class="pl-2 pr-2">
+            <div
+              *ngFor="let formFieldsSection of formFieldsGroupedBySections()"
+            >
+              <ngx-form
+                [formFields]="formFieldsSection?.formFields"
+                [formId]="formFieldsSection?.id"
+                [responsivenessClass]="'col-md-12'"
+                (formData)="onGetFormData($event, formFieldsSection?.id)"
+              ></ngx-form>
+            </div>
           </div>
         </div>
-      </div>
+        <ng-template #footer>
+          <div class="flex items-center gap-2">
+            <div class="w-100 d-flex justify-content-end">
+              <p-progress-spinner
+                *ngIf="saving"
+                strokeWidth="3"
+                fill="transparent"
+                animationDuration=".5s"
+                class="mr-2"
+                [style]="{ width: '35px', height: '35px' }"
+              />
+              <p-button
+                severity="primary"
+                [disabled]="!formData.isFormValid || saving"
+                (onClick)="onSave($event)"
+                label="Save"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-drawer>
     </div>
   </div>
 </div>

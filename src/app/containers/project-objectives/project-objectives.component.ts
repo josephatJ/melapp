@@ -61,6 +61,7 @@ export class ProjectObjectivesComponent {
     icon: 'pi pi-ticket',
     routerLink: '/projects',
   };
+  showObjectiveFormDrawer: boolean = false;
 
   constructor() {
     this.activatedRoute.params.subscribe((params) => {
@@ -225,6 +226,8 @@ export class ProjectObjectivesComponent {
           if (!response?.error) {
             this.saving = false;
             this.createFormMetadata();
+            this.showObjectiveFormDrawer = false;
+            this.projectsState.updateCurrentProjectEnrollment(null);
             this.loadObjectives();
           }
         },
@@ -236,6 +239,7 @@ export class ProjectObjectivesComponent {
 
   onSetCurrentObjective(event: Event, objective: any): void {
     event.stopPropagation();
+    this.showObjectiveFormDrawer = true;
     this.projectsState.updateCurrentProjectEnrollment(objective);
     this.formFieldsGroupedBySections.set(
       formulateFormFieldsBySections(

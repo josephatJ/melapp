@@ -119,6 +119,10 @@ export function formulateFormFieldsBySections(
                 disabled: keyedAutofedFields[trackedEntityAttribute?.id]
                   ? true
                   : false,
+                rows:
+                  trackedEntityAttribute?.code === 'OBJECTIVE_DESCRIPTION'
+                    ? 6
+                    : 2,
               };
             }),
           ]?.filter((formField: any) => formField),
