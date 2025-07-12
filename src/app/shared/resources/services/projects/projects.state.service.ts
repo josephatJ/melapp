@@ -9,6 +9,10 @@ export class SharedProjectsStateService {
   projectsPayload = this._projectsPayload.asReadonly();
   private _projectProgram = signal<any>(null);
   projectProgram = this._projectProgram.asReadonly();
+  private _currentProjectEnrollments = signal<any>(null);
+  currentProjectEnrollments = this._currentProjectEnrollments.asReadonly();
+  private _currentProjectEnrollment = signal<any>(null);
+  currentProjectEnrollment = this._currentProjectEnrollment.asReadonly();
 
   private _currentProject = signal<any>(null);
   currentProject = this._currentProject.asReadonly();
@@ -23,5 +27,13 @@ export class SharedProjectsStateService {
 
   updateCurrentProject(project: any) {
     this._currentProject.set(project);
+  }
+
+  updateCurrentProjectEnrollments(projectEnrollments: any) {
+    this._currentProjectEnrollments.set(projectEnrollments);
+  }
+
+  updateCurrentProjectEnrollment(projectEnrollment: any) {
+    this._currentProjectEnrollment.set(projectEnrollment);
   }
 }

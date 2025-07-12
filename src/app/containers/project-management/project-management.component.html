@@ -7,8 +7,11 @@
     <p-progress-spinner co ariaLabel="loading" />
   </div>
   <div *ngIf="currentUser() && projectProgram()">
+    <div class="w-100">
+      <p-breadcrumb [model]="breadCrubItems()" [home]="home" />
+    </div>
     <div
-      class="mb-4"
+      class="mb-4 p-2"
       *ngFor="let formFieldsSection of formFieldsGroupedBySections()"
     >
       <div class="h5 mt-2 mb-2 text-muted">

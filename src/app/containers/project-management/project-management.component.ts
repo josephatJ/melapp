@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { SharedCurrentUserStateService } from '../../shared/resources/services/current-user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedProjectsStateService } from '../../shared/resources/services/projects/projects.state.service';
@@ -17,6 +17,7 @@ import { NgxDhis2HttpClientService } from '../../shared/modules/ngx-http-client/
 import { TrackerDataService } from '../../shared/resources/services/tracker-data.service';
 import moment from 'moment';
 import { keyBy } from 'lodash';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-project-management',
@@ -46,6 +47,19 @@ export class ProjectManagementComponent {
   saving: boolean = false;
   routeId = signal<string>('new');
 
+  breadCrubItems = computed(() => [
+    {
+      label: this.currentProject()
+        ? this.currentProject()?.keyedAttributeValues['NAME']?.value
+        : 'New',
+    },
+  ]);
+  home: MenuItem = {
+    label: 'Projects',
+    icon: 'pi pi-ticket',
+    routerLink: '/projects',
+  };
+
   constructor() {
     this.activatedRoute.params.subscribe((params) => {
       const id = params['id'];
@@ -67,6 +81,7 @@ export class ProjectManagementComponent {
             this.formFieldsGroupedBySections.set(
               formulateFormFieldsBySections(
                 programResponse,
+                true,
                 this.currentProject()
               )
             );
@@ -85,7 +100,7 @@ export class ProjectManagementComponent {
                       keyedAttributeValues,
                     });
                     this.formFieldsGroupedBySections.set(
-                      formulateFormFieldsBySections(programResponse, {
+                      formulateFormFieldsBySections(programResponse, true, {
                         ...response,
                         keyedAttributeValues,
                       })
@@ -107,8 +122,6 @@ export class ProjectManagementComponent {
     this.formData.data = { ...(this.formData?.data || {}), ...formData?.data };
     this.formData.isFormValid = formData?.isFormValid;
     this.formData.formValidityBySection[id] = formData?.isFormValid;
-
-    console.log(formData);
   }
 
   onSave(event: Event): void {
@@ -169,7 +182,7 @@ export class ProjectManagementComponent {
         this.projectsState.currentProject()?.trackedEntity;
     }
 
-    data['enrollments'] = [enrollment];
+    // data['enrollments'] = [enrollment];
 
     this.httpClientService
       .post(`tracker?async=false`, {

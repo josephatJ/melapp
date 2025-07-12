@@ -10,7 +10,8 @@ export class TrackerDataService {
   constructor(private httpClient: NgxDhis2HttpClientService) {}
 
   searchTrackedEntities(
-    programId: string,
+    id: string,
+    isProgram: boolean,
     orgUnit?: string,
     fields?: string,
     pagination?: {
@@ -54,9 +55,9 @@ export class TrackerDataService {
       .get(
         `tracker/trackedEntities.json?paging=${
           pagination?.paging
-        }&fields=${fields}&order=createdAt:desc&program=${programId}${
-          orgUnit ? '&orgUnitMode=DESCENDANTS&orgUnit=' + orgUnit : ''
-        }${
+        }&fields=${fields}&order=createdAt:desc${
+          isProgram ? '&program=' + id : '&trackedEntityType=' + id
+        }${orgUnit ? '&orgUnitMode=DESCENDANTS&orgUnit=' + orgUnit : ''}${
           searchingParams?.length > 0 ? '&' + searchingParams?.join('&') : ''
         }${
           pagination?.page

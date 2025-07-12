@@ -2,11 +2,11 @@
   <div
     class="flex justify-center"
     animationDuration=".5s"
-    *ngIf="currentUser() === null"
+    *ngIf="currentUser() === null || !projectsPayload()"
   >
     <p-progress-spinner co ariaLabel="loading" />
   </div>
-  <div class="row" *ngIf="currentUser()">
+  <div class="row" *ngIf="currentUser() && projectsPayload()">
     <div class="col-md-8 col-sm-12 col-sx-12">
       <div class="h4 p-1 text-muted">Our Projects</div>
     </div>
@@ -38,9 +38,8 @@
         <ng-template #footer>
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-2">
-              <p-button icon="pi pi-user" rounded text></p-button>
               <p-button
-                icon="pi pi-bookmark"
+                icon="pi pi-user"
                 severity="secondary"
                 rounded
                 text

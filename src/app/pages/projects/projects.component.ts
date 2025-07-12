@@ -38,15 +38,16 @@ export class ProjectsComponent {
     ).subscribe({
       next: (programResponse) => {
         this.projectsState.updateProjectProgram(programResponse);
+        this.loadProjectsList();
       },
     });
-    this.loadProjectsList();
   }
 
   loadProjectsList(): void {
     this.trackerDataService
       .searchTrackedEntities(
-        PROJECTPROGRAMID,
+        this.projectProgram()?.trackedEntityType?.id,
+        false,
         undefined,
         DEFAULTTRACKEDFIELDS,
         { paging: false }
@@ -83,6 +84,34 @@ export class ProjectsComponent {
                               });
                               this.router.navigate([
                                 '/projects/' + trackedEntityData?.trackedEntity,
+                              ]);
+                            },
+                          },
+                          {
+                            label: 'Objectives',
+                            icon: 'pi pi-warehouse',
+                            command: (event: any) => {
+                              this.projectsState.updateCurrentProject({
+                                ...trackedEntityData,
+                                keyedAttributeValues,
+                              });
+                              this.router.navigate([
+                                '/projects/objectives/' +
+                                  trackedEntityData?.trackedEntity,
+                              ]);
+                            },
+                          },
+                          {
+                            label: 'Objectives',
+                            icon: 'pi pi-list',
+                            command: (event: any) => {
+                              this.projectsState.updateCurrentProject({
+                                ...trackedEntityData,
+                                keyedAttributeValues,
+                              });
+                              this.router.navigate([
+                                '/projects/activities/' +
+                                  trackedEntityData?.trackedEntity,
                               ]);
                             },
                           },

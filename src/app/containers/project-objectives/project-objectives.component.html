@@ -1,0 +1,84 @@
+<div class="mt-2 p-1 project-objectives-container">
+  <div
+    class="flex justify-center"
+    animationDuration=".5s"
+    *ngIf="
+      currentUser() === null ||
+      !projectProgram() ||
+      !currentProject() ||
+      !objectives()
+    "
+  >
+    <p-progress-spinner co ariaLabel="loading" />
+  </div>
+  <div
+    *ngIf="
+      currentUser() && projectProgram() && currentProject() && objectives()
+    "
+  >
+    <div class="w-100">
+      <p-breadcrumb [model]="breadCrubItems()" [home]="home" />
+    </div>
+    <div class="row mb-4 p-2">
+      <div class="col-md-7 col-sm-12 col-sx-12">
+        <div class="h5 mb-2 text-muted">Specific Objectives</div>
+        <p-table
+          size="small"
+          [value]="objectives()"
+          showGridlines
+          [tableStyle]="{ 'min-width': '30rem' }"
+        >
+          <ng-template #header>
+            <tr>
+              <th>Sn</th>
+              <th>Objective</th>
+              <th>Description</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-dataRow>
+            <tr (click)="onSetCurrentObjective($event, dataRow)">
+              <td>{{ dataRow?.sn }}</td>
+              <td>
+                {{ dataRow?.keyedAttributeValues["SPECIFIC_OBJECTIVE"]?.value }}
+              </td>
+              <td>
+                {{
+                  dataRow?.keyedAttributeValues["OBJECTIVE_DESCRIPTION"]?.value
+                }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="col-md-5 col-sm-12 col-sx-12">
+        <div class="pl-2 pr-2">
+          <div *ngFor="let formFieldsSection of formFieldsGroupedBySections()">
+            <ngx-form
+              [formFields]="formFieldsSection?.formFields"
+              [formId]="formFieldsSection?.id"
+              [responsivenessClass]="'col-md-12'"
+              (formData)="onGetFormData($event, formFieldsSection?.id)"
+            ></ngx-form>
+          </div>
+
+          <div class="w-100 d-flex justify-content-end">
+            <p-progress-spinner
+              *ngIf="saving"
+              strokeWidth="3"
+              fill="transparent"
+              animationDuration=".5s"
+              class="mr-2"
+              [style]="{ width: '35px', height: '35px' }"
+            />
+            <p-button
+              severity="primary"
+              [disabled]="!formData.isFormValid || saving"
+              (onClick)="onSave($event)"
+              label="Save"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

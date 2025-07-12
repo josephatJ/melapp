@@ -70,8 +70,22 @@ export const routes: Routes = [
   {
     path: 'projects/:id',
     loadComponent: () =>
-      import('./pages/project-management/project-management.component').then(
-        (m) => m.ProjectManagementComponent
-      ),
+      import(
+        './containers/project-management/project-management.component'
+      ).then((m) => m.ProjectManagementComponent),
+  },
+  {
+    path: 'projects/objectives/:id',
+    loadComponent: () =>
+      import(
+        './containers/project-objectives/project-objectives.component'
+      ).then((m) => m.ProjectObjectivesComponent),
+  },
+  {
+    path: 'projects/activities/:id',
+    loadComponent: () =>
+      import(
+        './containers/project-activities/project-activities.component'
+      ).then((m) => m.ProjectActivitiesComponent),
   },
 ];
