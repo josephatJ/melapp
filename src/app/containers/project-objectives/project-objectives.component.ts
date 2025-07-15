@@ -227,7 +227,6 @@ export class ProjectObjectivesComponent {
           attributes,
           events,
         };
-    console.log('enrollment', enrollment);
 
     if (this.objectivesState.currentObjective()) {
       data['trackedEntity'] =
@@ -306,10 +305,10 @@ export class ProjectObjectivesComponent {
 
   onAddNewObjective(event: Event): void {
     event.stopPropagation();
-    if (this.projectsState.currentProjectEnrollment()) {
+    if (this.currentObjective()) {
       this.formFieldsGroupedBySections.set([]);
     }
-    this.projectsState.updateCurrentProjectEnrollment(null);
+    this.objectivesState.updateCurrentObjective(null);
 
     this.createFormMetadata();
     this.showObjectiveFormDrawer = true;

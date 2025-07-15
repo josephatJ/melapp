@@ -14,12 +14,16 @@ import {
   DEFAULTTRACKEDFIELDS,
   LEVEL1ORGUNITID,
   PROJECTPROGRAMID,
+  RELATIONSHIPTYPE_BETWEEN_ACTIVITY_AND_OBJECTIVE,
+  RELATIONSHIPTYPE_BETWEEN_ACTIVITY_AND_PROJECT,
+  RELATIONSHIPTYPEBETWEENOBJECTIVEANDPROJECT,
 } from '../../shared/resources/app.constants';
-import { of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { primengModules } from '../../shared/primeng.modules';
 import { NgxFormComponent } from '../../shared/components/ngx-form/ngx-form.component';
 import { SharedActivitiesStateService } from '../../shared/resources/services/activities/activities.state.service';
+import { CustomField } from '../../shared/models/default-field.model';
 
 @Component({
   selector: 'app-project-activities',
@@ -43,6 +47,7 @@ export class ProjectActivitiesComponent {
   currentActivity = this.activitiesState.currentActivity;
 
   formFieldsGroupedBySections = signal<any[]>([]);
+  objectiveFormField!: CustomField;
   formData: FormDataModel = {
     data: {},
     isFormValid: false,
@@ -51,6 +56,7 @@ export class ProjectActivitiesComponent {
   formValidityBySection: any = {};
   saving: boolean = false;
   routeId = signal<string>('new');
+  selectedObjective = signal<any>(null);
 
   breadCrubItems = computed(() => [
     {
@@ -67,14 +73,17 @@ export class ProjectActivitiesComponent {
     routerLink: '/projects',
   };
   showActivityFormDrawer: boolean = false;
+  systemId$!: Observable<string>;
 
   constructor() {
     this.activatedRoute.params.subscribe((params) => {
       const id = params['id'];
       this.routeId.set(id);
+      this.loadObjectivesRelationships();
       this.createFormMetadata();
       this.loadProjectProgram();
       this.loadActivities();
+      this.loadSystemId();
     });
   }
 
@@ -89,6 +98,62 @@ export class ProjectActivitiesComponent {
         }
       },
     });
+  }
+
+  loadSystemId(): void {
+    this.systemId$ = this.httpClientService.get(`system/id.json`).pipe(
+      map((response: any) => {
+        return response?.codes[0];
+      })
+    );
+  }
+
+  loadObjectivesRelationships(value?: any): void {
+    this.trackerDataService
+      .loadRelationshipsByTrackedEntity(this.routeId())
+      .subscribe({
+        next: (response) => {
+          this.objectiveFormField = {
+            id: 'objective',
+            label: 'Specific Objective',
+            type: 'DROPDOWN',
+            value,
+            disabled: value != null || value != undefined,
+            options:
+              (
+                response?.filter(
+                  (relationship: any) =>
+                    relationship?.relationshipType ===
+                    RELATIONSHIPTYPEBETWEENOBJECTIVEANDPROJECT
+                ) || []
+              )?.map((projectObjectiveRelationship: any) => {
+                return {
+                  id: projectObjectiveRelationship?.from?.trackedEntity
+                    ?.trackedEntity,
+                  label:
+                    projectObjectiveRelationship?.keyedAttributeValues['CODE']
+                      ?.value +
+                    ': ' +
+                    projectObjectiveRelationship?.keyedAttributeValues[
+                      'SPECIFIC_OBJECTIVE'
+                    ]?.value,
+                  name:
+                    projectObjectiveRelationship?.keyedAttributeValues['CODE']
+                      ?.value +
+                    ': ' +
+                    projectObjectiveRelationship?.keyedAttributeValues[
+                      'SPECIFIC_OBJECTIVE'
+                    ]?.value,
+                  code: projectObjectiveRelationship?.from?.trackedEntity
+                    ?.trackedEntity,
+                  value:
+                    projectObjectiveRelationship?.from?.trackedEntity
+                      ?.trackedEntity,
+                };
+              }) || [],
+          };
+        },
+      });
   }
 
   createFormMetadata(): void {
@@ -150,11 +215,13 @@ export class ProjectActivitiesComponent {
     this.formData.data = { ...(this.formData?.data || {}), ...formData?.data };
     this.formData.isFormValid = formData?.isFormValid;
     this.formData.formValidityBySection[id] = formData?.isFormValid;
-
-    // console.log(formData);
   }
 
-  onSave(event: Event): void {
+  onGetObjective(formData: FormDataModel): void {
+    this.selectedObjective.set(formData?.data['objective']?.value);
+  }
+
+  onSave(event: Event, trackedEntityId?: any): void {
     event.stopPropagation();
     this.saving = true;
 
@@ -178,6 +245,9 @@ export class ProjectActivitiesComponent {
       )?.filter((attributeValue: any) => attributeValue?.value) || [];
     const orgUnit = LEVEL1ORGUNITID;
     let data: any = {
+      trackedEntity: this.currentActivity()
+        ? this.currentActivity()?.trackedEntity
+        : trackedEntityId,
       trackedEntityType: this.activityProgram()?.trackedEntityType?.id,
       orgUnit,
       attributes,
@@ -187,14 +257,46 @@ export class ProjectActivitiesComponent {
           program: this.activityProgram()?.id,
         },
       ],
+      relationships: this.currentActivity()
+        ? this.currentActivity()?.relationships
+        : [
+            {
+              from: {
+                trackedEntity: {
+                  trackedEntity: trackedEntityId,
+                },
+              },
+              relationshipType: RELATIONSHIPTYPE_BETWEEN_ACTIVITY_AND_PROJECT,
+              to: {
+                trackedEntity: {
+                  trackedEntity: this.routeId(),
+                },
+              },
+            },
+            {
+              from: {
+                trackedEntity: {
+                  trackedEntity: trackedEntityId,
+                },
+              },
+              relationshipType: RELATIONSHIPTYPE_BETWEEN_ACTIVITY_AND_OBJECTIVE,
+              to: {
+                trackedEntity: {
+                  trackedEntity: this.selectedObjective(),
+                },
+              },
+            },
+          ],
     };
 
     let events: any[] = [];
 
     let enrollment: any = this.activitiesState.currentActivity()
       ? {
-          ...this.activitiesState.currentActivity(),
+          ...this.currentActivity(),
           attributes,
+          status: 'ACTIVE',
+          program: this.activityProgram()?.id,
         }
       : {
           enrolledAt: new Date(),
@@ -237,13 +339,22 @@ export class ProjectActivitiesComponent {
     event.stopPropagation();
     this.showActivityFormDrawer = true;
     this.activitiesState.updateCurrentActivity(activity);
+    let value = '';
+    const relationship = (activity?.relationships?.filter(
+      (relationship: any) =>
+        relationship?.relationshipType ===
+        RELATIONSHIPTYPE_BETWEEN_ACTIVITY_AND_OBJECTIVE
+    ) || [])[0];
+
+    value = relationship?.to?.trackedEntity?.trackedEntity;
+    this.loadObjectivesRelationships(value);
     this.formFieldsGroupedBySections.set(
       formulateFormFieldsBySections(
-        ACTIVITYPROGRAMID,
+        this.activityProgram(),
         false,
         activity,
         null,
-        true
+        false
       )
     );
   }
@@ -255,7 +366,7 @@ export class ProjectActivitiesComponent {
         ACTIVITYPROGRAMID,
         true,
         undefined,
-        DEFAULTTRACKEDFIELDS,
+        DEFAULTTRACKEDFIELDS + ',relationships',
         { paging: false }
       )
       .subscribe({
@@ -279,5 +390,14 @@ export class ProjectActivitiesComponent {
           }
         },
       });
+  }
+
+  onAddActivity(event: Event): void {
+    event.stopPropagation();
+    if (this.currentActivity()) {
+      this.formFieldsGroupedBySections.set([]);
+    }
+    this.activitiesState.updateCurrentActivity(null);
+    this.showActivityFormDrawer = true;
   }
 }

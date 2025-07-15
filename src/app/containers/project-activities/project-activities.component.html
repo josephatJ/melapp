@@ -1,4 +1,7 @@
-<div class="mt-2 p-1 project-activities-container">
+<div
+  class="mt-2 p-1 project-activities-container"
+  *ngIf="{ systemId: systemId$ | async } as params"
+>
   <div
     class="flex justify-center"
     animationDuration=".5s"
@@ -6,7 +9,8 @@
       currentUser() === null ||
       !projectProgram() ||
       !currentProject() ||
-      !activities()
+      !activities() ||
+      !params?.systemId
     "
   >
     <p-progress-spinner co ariaLabel="loading" />
@@ -27,14 +31,6 @@
         <p-button
           severity="secondary"
           text
-          label="Activity"
-          icon="pi pi-plus"
-          (onClick)="showActivityFormDrawer = !showActivityFormDrawer"
-        />
-        <p-button
-          class="ml-2"
-          severity="secondary"
-          text
           label=""
           icon="pi pi-chevron-left"
           (onClick)="showActivityFormDrawer = !showActivityFormDrawer"
@@ -43,7 +39,7 @@
       <div class="col-md-12 col-sm-12 col-sx-12">
         <p-table
           size="small"
-          [value]="activities()"
+          [value]="activities()?.trackedEntities"
           showGridlines
           [tableStyle]="{ 'min-width': '30rem' }"
         >
@@ -62,7 +58,7 @@
                 {{ dataRow?.keyedAttributeValues["CODE"]?.value }}
               </td>
               <td>
-                {{ dataRow?.keyedAttributeValues["PROJECT_ACTIVITY"]?.value }}
+                {{ dataRow?.keyedAttributeValues["NAME"]?.value }}
               </td>
               <td>
                 {{ dataRow?.keyedAttributeValues["DESCRIPTION"]?.value }}
@@ -70,6 +66,16 @@
             </tr>
           </ng-template>
         </p-table>
+
+        <div class="d-flex justify-content-end mt-2">
+          <p-button
+            severity="secondary"
+            text
+            label="Activity"
+            icon="pi pi-plus"
+            (onClick)="onAddActivity($event)"
+          />
+        </div>
       </div>
       <p-drawer
         [(visible)]="showActivityFormDrawer"
@@ -85,6 +91,12 @@
         </ng-template>
         <div class="col-md-12 col-sm-12 col-sx-12">
           <div class="pl-2 pr-2">
+            <ngx-form
+              *ngIf="objectiveFormField"
+              [formFields]="[objectiveFormField]"
+              [responsivenessClass]="'col-md-12'"
+              (formData)="onGetObjective($event)"
+            ></ngx-form>
             <div
               *ngFor="let formFieldsSection of formFieldsGroupedBySections()"
             >
@@ -110,8 +122,10 @@
               />
               <p-button
                 severity="primary"
-                [disabled]="!formData.isFormValid || saving"
-                (onClick)="onSave($event)"
+                [disabled]="
+                  !formData.isFormValid || saving || !params?.systemId
+                "
+                (onClick)="onSave($event, params?.systemId)"
                 label="Save"
               />
             </div>

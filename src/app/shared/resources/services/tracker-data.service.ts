@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NgxDhis2HttpClientService } from '../../modules/ngx-http-client/services/http-client.service';
+import { keyBy } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +84,26 @@ export class TrackerDataService {
       .pipe(
         map((response) => {
           return response;
+        })
+      );
+  }
+
+  loadRelationshipsByTrackedEntity(trackedEntity: string): Observable<any[]> {
+    return this.httpClient
+      .get(
+        `tracker/relationships.json?paging=false&trackedEntity=${trackedEntity}&fields=relationship,relationshipType,from[trackedEntity]`
+      )
+      .pipe(
+        map((response: any) => {
+          return response?.relationships?.map((relationship: any) => {
+            return {
+              ...relationship,
+              keyedAttributeValues: keyBy(
+                relationship?.from?.trackedEntity?.attributes,
+                'code'
+              ),
+            };
+          });
         })
       );
   }

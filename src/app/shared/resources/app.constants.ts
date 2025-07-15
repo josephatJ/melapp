@@ -5,3 +5,5 @@ export const LEVEL1ORGUNITID = 'I9LhW9X2dYr';
 export const DEFAULTTRACKEDFIELDS =
   'orgUnit,updatedAt,trackedEntity,trackedEntityType,attributes,enrollments';
 export const RELATIONSHIPTYPEBETWEENOBJECTIVEANDPROJECT = 'McwcY2cg38a';
+export const RELATIONSHIPTYPE_BETWEEN_ACTIVITY_AND_PROJECT = 'x0zfaCXkmQC';
+export const RELATIONSHIPTYPE_BETWEEN_ACTIVITY_AND_OBJECTIVE = 'VJOuRqp3bU4';
