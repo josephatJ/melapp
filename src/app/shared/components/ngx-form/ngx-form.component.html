@@ -10,9 +10,11 @@
           style="margin-bottom: -4px; font-weight: 600"
           [ngStyle]="{
             color:
-              form.controls[field.id]?.invalid &&
-              form.controls[field.id]?.touched
-                ? 'red'
+              form.controls && form.controls[field.id]
+                ? form.controls[field.id].invalid &&
+                  form.controls[field.id].touched
+                  ? 'red'
+                  : ''
                 : ''
           }"
           for="{{ field?.id }}"

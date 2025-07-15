@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { NgxFormComponent } from '../../shared/components/ngx-form/ngx-form.component';
 import { MenuItem } from 'primeng/api';
 import { SharedCurrentUserStateService } from '../../shared/resources/services/current-user.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SharedProjectsStateService } from '../../shared/resources/services/projects/projects.state.service';
 import { TrackerMetadataService } from '../../shared/resources/services/tracker-metadata.service';
 import { NgxDhis2HttpClientService } from '../../shared/modules/ngx-http-client/services/http-client.service';
@@ -11,12 +11,16 @@ import { TrackerDataService } from '../../shared/resources/services/tracker-data
 import { FormDataModel } from '../../shared/models/form-data.model';
 import { primengModules } from '../../shared/primeng.modules';
 import {
+  DEFAULTTRACKEDFIELDS,
   LEVEL1ORGUNITID,
+  PROJECTOBJECTIVESPROGRAMID,
   PROJECTPROGRAMID,
+  RELATIONSHIPTYPEBETWEENOBJECTIVEANDPROJECT,
 } from '../../shared/resources/app.constants';
-import { of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { formulateFormFieldsBySections } from '../../shared/resources/helpers/generate-formfields.helper';
 import { keyBy } from 'lodash';
+import { SharedProjectObjectivesStateService } from '../../shared/resources/services/project-objectives/project-objectives.state';
 
 @Component({
   selector: 'app-project-objectives',
@@ -26,16 +30,18 @@ import { keyBy } from 'lodash';
 })
 export class ProjectObjectivesComponent {
   private userState = inject(SharedCurrentUserStateService);
-  private router = inject(Router);
   private projectsState = inject(SharedProjectsStateService);
+  private objectivesState = inject(SharedProjectObjectivesStateService);
   private trackerMetadataService = inject(TrackerMetadataService);
   private httpClientService = inject(NgxDhis2HttpClientService);
   private activatedRoute = inject(ActivatedRoute);
   private trackerDataService = inject(TrackerDataService);
   projectProgram = this.projectsState.projectProgram;
+  objectiveProgram = this.objectivesState.objectiveProgram;
   currentUser = this.userState.currentUser;
   currentProject = this.projectsState.currentProject;
-  objectives = this.projectsState.currentProjectEnrollments;
+  currentObjective = this.objectivesState.currentObjective;
+  objectives = this.objectivesState.objectives;
 
   formFieldsGroupedBySections = signal<any[]>([]);
   formData: FormDataModel = {
@@ -62,6 +68,7 @@ export class ProjectObjectivesComponent {
     routerLink: '/projects',
   };
   showObjectiveFormDrawer: boolean = false;
+  systemId$!: Observable<string>;
 
   constructor() {
     this.activatedRoute.params.subscribe((params) => {
@@ -69,10 +76,62 @@ export class ProjectObjectivesComponent {
       this.routeId.set(id);
       this.createFormMetadata();
       this.loadObjectives();
+      this.loadProjectProgram();
+      this.loadSystemId();
     });
   }
 
+  loadSystemId(): void {
+    this.systemId$ = this.httpClientService.get(`system/id.json`).pipe(
+      map((response: any) => {
+        return response?.codes[0];
+      })
+    );
+  }
+
   createFormMetadata(): void {
+    (!this.objectiveProgram()
+      ? this.trackerMetadataService.getProgram(PROJECTOBJECTIVESPROGRAMID)
+      : of(this.objectiveProgram())
+    ).subscribe({
+      next: (programResponse) => {
+        if (!programResponse?.error) {
+          this.objectivesState.updateObjectiveProgram(programResponse);
+          this.trackerDataService
+            .loadTrackedEntityDetails(this.routeId())
+            .subscribe({
+              next: (response) => {
+                if (!response?.error) {
+                  const keyedAttributeValues = keyBy(
+                    response?.attributes,
+                    'code'
+                  );
+                  this.projectsState.updateCurrentProject({
+                    ...response,
+                    keyedAttributeValues,
+                  });
+                  this.formFieldsGroupedBySections.set(
+                    formulateFormFieldsBySections(
+                      programResponse,
+                      false,
+                      this.currentObjective(),
+                      null,
+                      false
+                    )
+                  );
+                }
+              },
+            });
+        } else {
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  loadProjectProgram(): void {
     (!this.projectProgram()
       ? this.trackerMetadataService.getProgram(PROJECTPROGRAMID)
       : of(this.projectProgram())
@@ -80,52 +139,7 @@ export class ProjectObjectivesComponent {
       next: (programResponse) => {
         if (!programResponse?.error) {
           this.projectsState.updateProjectProgram(programResponse);
-          if (this.routeId() === 'new') {
-            this.projectsState.updateCurrentProject(null);
-            this.formFieldsGroupedBySections.set(
-              formulateFormFieldsBySections(
-                programResponse,
-                false,
-                this.currentProject(),
-                null,
-                true
-              )
-            );
-          } else {
-            this.trackerDataService
-              .loadTrackedEntityDetails(this.routeId())
-              .subscribe({
-                next: (response) => {
-                  if (!response?.error) {
-                    const keyedAttributeValues = keyBy(
-                      response?.attributes,
-                      'code'
-                    );
-                    this.projectsState.updateCurrentProject({
-                      ...response,
-                      keyedAttributeValues,
-                    });
-                    this.formFieldsGroupedBySections.set(
-                      formulateFormFieldsBySections(
-                        programResponse,
-                        false,
-                        {
-                          ...response,
-                          keyedAttributeValues,
-                        },
-                        null,
-                        true
-                      )
-                    );
-                  }
-                },
-              });
-          }
-        } else {
         }
-      },
-      error: (error) => {
-        console.log(error);
       },
     });
   }
@@ -138,7 +152,7 @@ export class ProjectObjectivesComponent {
     // console.log(formData);
   }
 
-  onSave(event: Event): void {
+  onSave(event: Event, trackedEntityId: any): void {
     event.stopPropagation();
     this.saving = true;
 
@@ -162,60 +176,65 @@ export class ProjectObjectivesComponent {
       )?.filter((attributeValue: any) => attributeValue?.value) || [];
     const orgUnit = LEVEL1ORGUNITID;
     let data: any = {
-      trackedEntityType: this.projectProgram()?.trackedEntityType?.id,
+      trackedEntity: this.currentObjective()
+        ? this.currentObjective()?.trackedEntity
+        : trackedEntityId,
+      trackedEntityType: this.objectiveProgram()?.trackedEntityType?.id,
       orgUnit,
       attributes,
       programOwners: [
         {
           ownerOrgUnit: orgUnit,
-          program: this.projectProgram()?.id,
+          program: this.objectiveProgram()?.id,
         },
       ],
+      relationships: this.currentObjective()
+        ? this.currentObjective()?.relationships
+        : [
+            {
+              from: {
+                trackedEntity: {
+                  trackedEntity: this.currentObjective()
+                    ? this.currentObjective()?.trackedEntity
+                    : trackedEntityId,
+                },
+              },
+              relationshipType: RELATIONSHIPTYPEBETWEENOBJECTIVEANDPROJECT,
+              to: {
+                trackedEntity: {
+                  trackedEntity: this.routeId(),
+                },
+              },
+            },
+          ],
     };
 
-    let events: any[] = this.projectsState.currentProjectEnrollment()
-      ? this.projectsState.currentProjectEnrollment()?.events
-      : [];
+    let events: any[] = [];
 
-    let enrollment: any = this.projectsState.currentProjectEnrollment()
+    let enrollment: any = this.currentObjective()
       ? {
-          ...this.projectsState.currentProjectEnrollment(),
+          ...this.currentObjective()?.enrollments[0],
           attributes,
+          status: 'ACTIVE',
+          program: this.objectiveProgram()?.id,
         }
       : {
           enrolledAt: new Date(),
           occurredAt: new Date(),
-          program: this.projectProgram()?.id,
+          program: this.objectiveProgram()?.id,
           orgUnit,
           status: 'ACTIVE',
-          attributes: [...this.currentProject()?.attributes, ...attributes],
+          attributes,
           events,
         };
+    console.log('enrollment', enrollment);
 
-    if (this.projectsState.currentProject() && this.routeId() !== 'new') {
+    if (this.objectivesState.currentObjective()) {
       data['trackedEntity'] =
-        this.projectsState.currentProject()?.trackedEntity;
+        this.objectivesState.currentObjective()?.trackedEntity;
     }
 
-    if (
-      !this.projectsState.currentProjectEnrollments() ||
-      this.projectsState.currentProjectEnrollments()?.length === 0
-    ) {
-      data['enrollments'] = [enrollment];
-    } else {
-      data['enrollments'] = [
-        ...(this.projectsState?.currentProjectEnrollment()
-          ? this.projectsState
-              .currentProjectEnrollments()
-              ?.filter(
-                (enrollment: any) =>
-                  enrollment?.enrollment !==
-                  this.projectsState?.currentProjectEnrollment()?.enrollment
-              ) || []
-          : this.projectsState.currentProjectEnrollments() || []),
-        enrollment,
-      ];
-    }
+    data['enrollments'] = [enrollment];
 
     this.httpClientService
       .post(`tracker?async=false`, {
@@ -227,7 +246,7 @@ export class ProjectObjectivesComponent {
             this.saving = false;
             this.createFormMetadata();
             this.showObjectiveFormDrawer = false;
-            this.projectsState.updateCurrentProjectEnrollment(null);
+            this.objectivesState.updateCurrentObjective(null);
             this.loadObjectives();
           }
         },
@@ -240,35 +259,59 @@ export class ProjectObjectivesComponent {
   onSetCurrentObjective(event: Event, objective: any): void {
     event.stopPropagation();
     this.showObjectiveFormDrawer = true;
-    this.projectsState.updateCurrentProjectEnrollment(objective);
+    this.objectivesState.updateCurrentObjective(objective);
     this.formFieldsGroupedBySections.set(
       formulateFormFieldsBySections(
-        this.projectProgram(),
+        this.objectiveProgram(),
         false,
         objective,
         null,
-        true
+        false
       )
     );
   }
 
   loadObjectives(): void {
-    this.projectsState.updateCurrentProjectEnrollments(null);
-    this.trackerDataService.loadTrackedEntityDetails(this.routeId()).subscribe({
-      next: (response) => {
-        if (!response?.error) {
-          console.log(response?.enrollments);
-          this.projectsState.updateCurrentProjectEnrollments(
-            response?.enrollments?.map((enrollment: any, index: number) => {
-              return {
-                ...enrollment,
-                sn: index + 1,
-                keyedAttributeValues: keyBy(enrollment?.attributes, 'code'),
-              };
-            })
-          );
-        }
-      },
-    });
+    this.objectivesState.updateObjectives(null);
+    this.trackerDataService
+      .searchTrackedEntities(
+        PROJECTOBJECTIVESPROGRAMID,
+        true,
+        undefined,
+        DEFAULTTRACKEDFIELDS + ',relationships',
+        { paging: false }
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (!response?.error) {
+            this.objectivesState.updateObjectives({
+              ...response,
+              trackedEntities: response?.trackedEntities?.map(
+                (trackedEntityData: any, index: number) => {
+                  return {
+                    ...trackedEntityData,
+                    sn: index + 1,
+                    keyedAttributeValues: keyBy(
+                      trackedEntityData?.attributes,
+                      'code'
+                    ),
+                  };
+                }
+              ),
+            });
+          }
+        },
+      });
+  }
+
+  onAddNewObjective(event: Event): void {
+    event.stopPropagation();
+    if (this.projectsState.currentProjectEnrollment()) {
+      this.formFieldsGroupedBySections.set([]);
+    }
+    this.projectsState.updateCurrentProjectEnrollment(null);
+
+    this.createFormMetadata();
+    this.showObjectiveFormDrawer = true;
   }
 }

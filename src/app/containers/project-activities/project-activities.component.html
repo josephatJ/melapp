@@ -21,10 +21,18 @@
     </div>
     <div class="row mb-4 p-2">
       <div class="col-10">
-        <div class="h5 mb-2 text-muted">Specific activities</div>
+        <div class="h5 mb-2 text-muted">Project activities</div>
       </div>
       <div class="col-2 d-flex justify-content-end">
         <p-button
+          severity="secondary"
+          text
+          label="Activity"
+          icon="pi pi-plus"
+          (onClick)="showActivityFormDrawer = !showActivityFormDrawer"
+        />
+        <p-button
+          class="ml-2"
           severity="secondary"
           text
           label=""
@@ -42,7 +50,8 @@
           <ng-template #header>
             <tr>
               <th>Sn</th>
-              <th>Objective</th>
+              <th>Code</th>
+              <th>Activity</th>
               <th>Description</th>
             </tr>
           </ng-template>
@@ -50,12 +59,13 @@
             <tr (click)="onSetCurrentActivity($event, dataRow)">
               <td>{{ dataRow?.sn }}</td>
               <td>
-                {{ dataRow?.keyedAttributeValues["SPECIFIC_OBJECTIVE"]?.value }}
+                {{ dataRow?.keyedAttributeValues["CODE"]?.value }}
               </td>
               <td>
-                {{
-                  dataRow?.keyedAttributeValues["OBJECTIVE_DESCRIPTION"]?.value
-                }}
+                {{ dataRow?.keyedAttributeValues["PROJECT_ACTIVITY"]?.value }}
+              </td>
+              <td>
+                {{ dataRow?.keyedAttributeValues["DESCRIPTION"]?.value }}
               </td>
             </tr>
           </ng-template>
@@ -68,7 +78,9 @@
       >
         <ng-template #header>
           <div class="flex items-center gap-2">
-            <span class="font-bold">Objective management</span>
+            <span class="font-bold text-muted"
+              >Project activities management</span
+            >
           </div>
         </ng-template>
         <div class="col-md-12 col-sm-12 col-sx-12">
